@@ -1,108 +1,85 @@
-# Guide to the completed proof
-
-The final theorem is a short assembly of the development:
+# Proof guide
 
 ```lean
 theorem KhanSL2.mainStatement : KhanSL2.MainStatement :=
   KhanSL2.Collision.mainStatement_of_kFactor KhanSL2.Collision.kFactor
 ```
 
-The implementation is in [MainProof.lean](../lean/MainProof.lean). This guide
-explains what the two dependencies contain. Exact declaration names and links
-are indexed in [DECLARATIONS.md](DECLARATIONS.md).
+([MainProof.lean](../lean/MainProof.lean).) `Collision.kFactor` is the factorization theorem
+for coefficient homology on coprime charts; `Collision.mainStatement_of_kFactor` derives the main
+theorem from it. This page describes both. Declaration names and files are listed in
+[DECLARATIONS.md](DECLARATIONS.md).
 
-## Fixed structures and the canonical map
+## The two structures and the map
 
-The source starts as a concrete differential generators-and-relations quotient.
-Its bracket is constructed, and all super-PVA axioms are proved. Independently,
-the target is constructed from finite relative CE cochains: the differential
-squares to zero, preserves invariants, and supports the induced product,
-translation, grading, and bracket. Those induced operations also satisfy the
-PVA axioms.
+The source is a quotient of a differential generators-and-relations presentation. Its bracket is
+constructed on the quotient, and the super-PVA axioms are proved for it. The target is built
+from finite relative CE cochains: the differential squares to zero and preserves invariants, and
+cohomology inherits a product, a translation, a grading and a bracket, which satisfy the PVA
+axioms.
 
-The prescribed cocycles satisfy the source relations. Evaluation therefore
-descends to the fixed linear map `phi`; its operation-preservation laws and
-uniqueness are proved before the isomorphism theorem. At this stage proving
-`MainStatement` is equivalent to proving that this particular map is bijective.
+The cocycles \(\mathsf{x}\) and \(\mathsf{y}\) satisfy the source relations, so evaluation
+descends to the linear map `phi`. Its preservation laws and its uniqueness are proved first.
+After that, `MainStatement` is equivalent to bijectivity of `phi`
+(`mainStatement_iff_bijective`).
 
-## Injectivity and the dual comparison
+## Injectivity and duality
 
-Closed Cartan chains produce functionals separating each finite source sector.
-Finite Taylor comparisons and the grading extend this separation to arbitrary
-finite sums, proving `phi_injective`.
+Closed Cartan chains give functionals that separate each finite source sector. Finite Taylor
+comparisons and the grading extend the separation to finite sums, which proves `phi_injective`.
 
-The chain/cochain dictionary identifies each homogeneous cohomology piece with
-the dual of a finite-dimensional relative CE homology piece. Under that
-identification, `psiK` is the transpose of `phi`, and injectivity gives its
-surjectivity. The restricted source dual is then identified with the polynomial
-module `J`; the original coefficient operators give the coefficient-ring action
-on `K`, and the specified comparison `psi` is proved linear for these actions.
+The chain/cochain dictionary identifies each homogeneous piece of cohomology with the dual of a
+finite-dimensional piece of relative CE homology `K`. Under it, `psiK` is the transpose of `phi`,
+so injectivity of `phi` gives surjectivity of `psiK`. The restricted source dual is identified
+with the polynomial module `J`. The coefficient operators make `K` a module over the coefficient
+ring, and the comparison `psi` is linear for these actions.
 
-## Relative BGG, depth, and the comparison induction
+## BGG resolution, depth and induction
 
-The development constructs the relative affine A1 BGG resolution on its stated
-induced terms, including its augmentation, exactness, energy grading, relative
-projectivity, and relative splittings. Applying the coefficient construction
-gives the finite BGG complex used in the proof.
+The relative affine A₁ BGG resolution is constructed on its induced terms, with augmentation,
+exactness, energy grading, relative projectivity and relative splittings. Applying the
+coefficient construction gives a finite BGG complex. Its terms are finite and projective over the
+coefficient ring, and the top term is free of rank one.
 
-Its terms are proved finite and projective over the coefficient ring; the top
-term is free of rank one. The low-degree comparison follows from the deformation
-argument. For middle degrees, the source-side depth bound and support of the
-comparison kernel on the collision locus force that kernel to vanish. Strong
-induction on coefficient degree assembles these cases.
+The comparison is proved injective by strong induction on coefficient degree. The two lowest
+degrees follow from a deformation argument. In middle degrees, the depth bound on the source side
+and the support of the comparison kernel on the collision locus force the kernel to vanish.
 
-This part is available as
-`Conditional.mainStatement_of_collisionSupport`: it is an intermediate theorem
-whose collision-support input is supplied by the next part of the development.
+`Conditional.mainStatement_of_collisionSupport` packages this step: it proves the main theorem
+from a collision-support hypothesis, which the next step supplies.
 
-## Strong Macdonald and factorization on coprime charts
+## Factorization on coprime charts
 
-The existing checked Strong Macdonald/Hodge calculation identifies harmonic
-invariants and their free generators. The `Macdonald/StrongBridge*` modules
-identify that model with the concrete coefficient/cohomology constructions,
-including normalization, grading, coefficient operators, and coproducts.
+The Strong Macdonald/Hodge development identifies the harmonic invariants and their free
+generators. The `Macdonald/StrongBridge*` modules transport this model to the coefficient and
+cohomology constructions above, including normalization, grading, coefficient operators and
+coproducts.
 
-The actual normalized symmetric coproduct is compared with root coordinates.
-This proves the symmetric chart quasi-isomorphism and then
-`SymmetricFamily.symmetricTensorShuffle`. Specialization and finite local
-filtrations transfer the result to the exterior coefficient shuffle; collisions
-within either factor are permitted, while the two factor supports are disjoint.
+Comparing the normalized symmetric coproduct with root coordinates proves the symmetric chart
+quasi-isomorphism, and then `SymmetricFamily.symmetricTensorShuffle`. Specialization and finite
+local filtrations carry this over to the exterior coefficient shuffle. Collisions within one
+factor are allowed; the supports of the two factors are disjoint.
 
-Finite BGG comparison and complex-point detection give the chart homology
-comparison. Kunneth is applied with the original independent coefficient rings
-and the required flatness before the mixed coefficient actions are balanced.
-This produces `chartFactorizationEquiv` for the original coefficient homology.
-The final theorem `Collision.kFactor` has no remaining shuffle or factorization
-hypothesis.
+Finite BGG comparison and detection at complex points give the chart comparison in homology.
+Künneth is applied over the two independent coefficient rings, with the flatness it needs, before
+the mixed coefficient actions are balanced. The result is `chartFactorizationEquiv`, and from it
+`Collision.kFactor`.
 
-## Closing the proof
+## Assembly
 
-The proved factorization of `K`, together with the already proved factorization
-of `J`, supplies collision support for the original comparison kernel.
-The BGG/depth/deformation induction then proves the needed comparison
-injectivity. Homogeneous duality gives surjectivity of `phi`; its proved
-injectivity and its established PVA morphism laws give `MainStatement`.
+The factorization of `K`, together with the factorization of `J`, gives collision support for
+the comparison kernel. The induction above then proves the comparison injective. Homogeneous
+duality turns this into surjectivity of `phi`. With injectivity and the morphism laws, that is
+`MainStatement`.
 
 ```text
-checked Strong Macdonald calculation
-    -> actual symmetric shuffle
-    -> exterior shuffle and finite BGG chart comparison
-    -> coefficient-compatible Kunneth
-    -> KFactor
-    -> collision support
-    -> depth/deformation comparison induction
-    -> bijectivity of the specified phi
-    -> MainStatement
+Strong Macdonald / Hodge
+  -> symmetric shuffle
+  -> exterior shuffle and finite BGG chart comparison
+  -> Kunneth compatible with the coefficient actions
+  -> KFactor
+  -> collision support
+  -> depth / deformation induction
+  -> phi bijective
+  -> MainStatement
 ```
-
-All arrows in this diagram summarize proved dependencies, not new assumptions.
-
-## Reading the verification result
-
-A native build checks Lean proof terms. The final axiom audit checks that the
-completed theorem has its exact unconditional type and that its dependencies
-use only `propext`, `Classical.choice`, and `Quot.sound`. Neither check alone
-decides whether an English formulation has been translated as intended; that
-is why the finite-mode convention and other mathematical choices are listed
-explicitly in [SCOPE.md](SCOPE.md).
-
