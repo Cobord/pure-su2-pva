@@ -836,6 +836,7 @@
   "KhanSL2/Modules/DepthPolynomialComparison.lean": "8e9ee318bf63b40e9bab21ddf148ab80526c7ee0b19e6f6003b9617f608b4dfa",
   "KhanSL2/Modules/GradedAssembly.lean": "2d6924282b6920aff9aa48a68e9427ef25f593bb675deb69489ba878a16ea913",
   "KhanSL2/Modules/ModeShiftAdjoint.lean": "14f5de8a251687297d20e1a4a08dcc20b24b8102f217ad9e0de12c6c17b43fb0",
+  "KhanSL2/Modules/ModeShiftCommute.lean": "19ce25bad30dccb26f11b2f460a26bdff0e28d05572a9f56d7e285722e4f9ed0",
   "KhanSL2/Modules/ModeShifts.lean": "f11ac7c195eff9bb15ff708c49ebf3abaf48f522fe5291b0c3d8f03bde4f860c",
   "KhanSL2/Modules/PolynomialComparison.lean": "528b6ea585b43491a03472b279c80734b9a2bb8a57876d80a487a1060a16af1e",
   "KhanSL2/Modules/PolynomialMap.lean": "8557d8ab00fd60790102f6872ac6292edd941e0d15735bbe75db514c67b7f875",
