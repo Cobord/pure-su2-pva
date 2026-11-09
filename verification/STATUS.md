@@ -1,50 +1,28 @@
-# Verification report
+# Verification status
 
-**The native build and all 20 standalone audits passed.** The final delivered
-sources were rebuilt and the explicit theorem audit passed on 2026-10-27T13:46:20.3346214Z.
+The native build and all 20 audit files passed. After three comment-only corrections, all
+default targets were rebuilt and `FinalAudit` passed at 2026-10-27T13:46:20.3346214Z.
 
-The checked theorem is:
-
-```lean
-KhanSL2.mainStatement : KhanSL2.MainStatement
-```
-
-Its exact type has no remaining mathematical premise. The axiom audit reports
-only `propext`, `Classical.choice`, and `Quot.sound`, with no `sorryAx` or
-additional mathematical axiom. The complete main audit traverses 20,655 safe
-project declarations with the selected private proof bodies available. The
-additional release audit checks `KhanSL2.mainStatement_explicit`.
+`#print axioms KhanSL2.mainStatement` reports `propext`, `Classical.choice` and `Quot.sound`.
+`MainProofAudit` checks the same for all 20,655 project declarations in the import closure, with
+private proof bodies imported. `FinalAudit` checks `KhanSL2.mainStatement_explicit`.
 
 | Check | Result | Evidence |
 |---|---|---|
-| Full native build and 20 standalone audits | Passed | [Native verification log](native-build.log) |
-| Final sources after documentation cleanup, all default targets | Passed | [Final source build](final-source-build.log) |
-| Explicit theorem interface and permitted axioms | Passed | [FinalAudit.lean](../lean/FinalAudit.lean) and final source log |
-| Original mathematical definitions and proofs preserved | Passed | [Comment-only correction certificate](comment-only-edits.json), original source hashes and integrity scripts |
-| Frozen specification ZIP and Comparator configuration | Validated | [Reference metadata](reference.json) |
-| Export of the frozen main theorem and its dependencies | Passed | [Machine-readable results](results.json) |
-| Optional native export replay | Inconclusive; no verdict within the 300-second trial | [Machine-readable results](results.json) |
-| Sandboxed Comparator | Not run in this environment | Linux/WSL instructions in [README.md](README.md) |
-| All bundled external kernels | Not run | Optional `--paranoid` workflow |
+| Native build and 20 audit files | Passed | [native-build.log](native-build.log) |
+| Rebuild of all default targets after the comment corrections | Passed | [final-source-build.log](final-source-build.log) |
+| Type and axioms of `mainStatement_explicit` | Passed | [FinalAudit.lean](../lean/FinalAudit.lean), final-source-build.log |
+| Original sources unchanged outside three block comments | Passed | [comment-only-edits.json](comment-only-edits.json), integrity scripts |
+| `reference.zip` and comparator configuration | Validated | [reference.json](reference.json) |
+| Export of the frozen theorem and its dependencies | Passed | [results.json](results.json) |
+| Native replay of the export | Inconclusive: no verdict after 300 s | [results.json](results.json) |
+| Sandboxed comparator | Not run (needs Linux) | [README.md](README.md) |
+| All bundled external kernels | Not run | `--paranoid` |
 
-The proof library preserves all 1,046 reference Lean files' mathematical code.
-Of those files, 1,043 are byte-identical and three have only a documented block
-comment correction. Two new Lean files provide the explicit theorem interface
-and its audit. The integrity scripts reverse only those certified comment edits
-and recover the reference hashes exactly.
+Of the 1,046 original Lean files, 1,043 are byte-identical and three differ inside one block
+comment each. `Final.lean` and `FinalAudit.lean` are new. Hashes of the delivered sources are in
+[final-source-sha256.json](final-source-sha256.json). The build reused Lake's cache. The full audit
+run finished at 2026-10-27T13:39:13.6463127Z, before the comment corrections and the final rebuild.
 
-Native verification used ordinary Lake cache reuse. The source archive excludes
-build caches and contains the pinned dependency configuration. The byte hashes
-of the delivered checked sources are in [final-source-sha256.json](final-source-sha256.json).
-The full standalone audit run completed at 2026-10-27T13:39:13.6463127Z; the comment corrections
-were followed by the final default-target rebuild and explicit theorem audit.
-
-Some audit output lists intermediate lemmas with premises. The final theorem
-check above supplies those premises with proved results and has no remaining
-mathematical hypotheses.
-
-Successful compilation and axiom checking certify the precise Lean proposition.
-The frozen comparison workflow checks agreement with the formal specification;
-mathematical interpretation is documented in [the scope guide](../docs/SCOPE.md).
-The optional independent checks are not represented as passed merely because
-their scripts are provided.
+Some audit files print intermediate lemmas that take hypotheses; `mainStatement` discharges all
+of them.
