@@ -1,91 +1,81 @@
-# Pure SU(2) PVA: Lean formalization
+# Pure SU(2) PVA in Lean
 
-This repository formalizes the specified-map isomorphism in **Theorem 1.1** of
-[Lie Algebra Cohomology and Seiberg-Witten Theory](paper/Pure_SU2_PVA_Proof.pdf).
-The canonical map is a graded differential PVA isomorphism. The completed theorem is
+A Lean 4 formalization of Theorem 1.1 of A. Z. Khan,
+[*Lie Algebra Cohomology and Seiberg-Witten Theory*](paper/Pure_SU2_PVA_Proof.pdf).
+The theorem: the canonical map `phi` from the differential Poisson vertex superalgebra with
+generators X, Y and relations X² = XY = X∂Y = Y∂Y = 0 to the relative Lie algebra cohomology
+H\*(sl₂[x,y]/(y²), sl₂) is an isomorphism of graded differential Poisson vertex superalgebras.
 
 ```lean
-KhanSL2.mainStatement : KhanSL2.MainStatement
+theorem KhanSL2.mainStatement : KhanSL2.MainStatement
 ```
 
-It has no remaining mathematical hypotheses. Its proof uses only Lean's standard
-foundational axioms `propext`, `Classical.choice`, and `Quot.sound`.
+`MainStatement` ([MainStatement.lean](lean/KhanSL2/MainStatement.lean)) says that `phi` is
+bijective and preserves the unit, product, translation, λ-bracket and grading.
+[Final.lean](lean/Final.lean) restates it with the source, target and map written out. The
+proof depends on `propext`, `Classical.choice` and `Quot.sound` only.
 
-The development comprises approximately **121,000 lines of Lean across 1,048
-source files**, including definitions, proofs, comments, and audit files, but
-excluding external dependencies such as mathlib and Tau Ceti.
+The development also proves the sl₂ case of Theorem B of Fishel–Grojnowski–Teleman, in its
+invariant-theoretic form: the harmonic invariants are the free supercommutative algebra on the
+stated even and odd generators
+([`StrongMacdonald.harm_free`](lean/KhanSL2/StrongMacdonald/SliceRing.lean)), and in each
+bidegree they are isomorphic to cohomology
+([`StrongMacdonald.harmEquivCohom`](lean/KhanSL2/StrongMacdonald/Hodge.lean)).
 
-As a result of potential independent interest, the project also formalizes the
-**sl₂ case of Fishel–Grojnowski–Teleman's (FGT) Theorem B**, in its
-invariant-theoretic form: harmonic invariants form the free supercommutative
-algebra on the specified even and odd generators. See
-[`StrongMacdonald.harm_free`](lean/KhanSL2/StrongMacdonald/SliceRing.lean),
-together with the identification of harmonic invariants with cohomology in each
-bidegree, [`StrongMacdonald.harmEquivCohom`](lean/KhanSL2/StrongMacdonald/Hodge.lean).
+Size: about 121,000 lines in 1,048 Lean files, counting comments and audit files, on top of
+mathlib and Tau Ceti.
 
-**Start here:** [read the precise mathematical scope](docs/SCOPE.md),
-[open the explicit theorem](lean/Final.lean), or
-[follow the paper-to-Lean dictionary](docs/DECLARATIONS.md).
+## Build
 
-## Open and check in VS Code
-
-Open **[sl2-vfinal.code-workspace](sl2-vfinal.code-workspace)**, or use
-**File → Open Folder** and select the **`lean` subfolder** containing
-`lakefile.toml`. The toolchain file selects Lean 4.36.0-rc1; keep it and the
-manifest with the sources. Do not change dependency versions to make a build work.
-
-In a terminal in `lean/`, initialize the pinned dependencies and build:
-
-```powershell
-lake exe cache get
-lake build FinalAudit
-```
-
-For a complete build and all 20 standalone audits, open a PowerShell terminal
-in the **release root** and run:
-
-```powershell
-.\verify.ps1 -Serial
-```
-
-On Linux/macOS, from the release root:
+Lean 4.36.0-rc1 is pinned in `lean/lean-toolchain`; mathlib and Tau Ceti are pinned in
+`lean/lake-manifest.json`. The first build downloads them.
 
 ```sh
-bash scripts/verify.sh
+cd lean
+lake exe cache get
+lake build FinalAudit      # the main theorem and its axiom check
 ```
 
-The Bash verification script also requires Python 3 for source-integrity checks.
-The PowerShell workflow does not require Python. Builds use mathlib and Tau Ceti;
-the first build needs network access to fetch the pinned dependencies.
+The full check, from the repository root, is `bash scripts/verify.sh` (Linux/macOS, needs
+Python 3) or `.\verify.ps1 -Serial` (Windows PowerShell). It checks the Lean sources against the
+hashes in `verification/`, builds every default target and re-runs the 20 audit files.
 
-## Check the theorem yourself
+In VS Code, open [sl2-vfinal.code-workspace](sl2-vfinal.code-workspace) or the `lean/` folder.
 
-Create a temporary file in `lean/` containing:
+## Check the theorem
+
+In a scratch file under `lean/`:
 
 ```lean
 import Final
 
-#check KhanSL2.mainStatement
 #check KhanSL2.mainStatement_explicit
-
-example : KhanSL2.MainStatement := KhanSL2.mainStatement
-
 #print axioms KhanSL2.mainStatement
+-- 'KhanSL2.mainStatement' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
-The uppercase `MainStatement` is the proposition. The lowercase `mainStatement`
-is its proof. The displayed theorem type has no premise asking you to prove
-`KFactor`, FGT, or any other mathematical input. The axiom output should contain
-only the three standard axioms listed above, with no `sorryAx`.
+`MainStatement` is the proposition and `mainStatement` is its proof.
 
-## Dependency graph
+## What is trusted
 
-This overview is extracted from the local module imports reachable from
-`MainProof`: **967 modules and 1,738 direct import links**. It displays 18
-selected modules, with intermediate files collapsed and redundant arrows removed.
-Arrows point from a dependency to a module that uses it, possibly indirectly.
-External mathlib and Tau Ceti modules are omitted. This is a module-import graph,
-not a graph of individual theorem dependencies.
+- Lean's kernel and the three standard axioms. `MainProofAudit.lean` fails if any project
+  declaration in the theorem's import closure depends on another axiom or on `sorryAx`.
+- The definitions of the source, the target and `phi`. Lean checks the proposition as written;
+  whether it matches the paper is a question about those definitions.
+  [SCOPE.md](docs/SCOPE.md) lists the conventions needed to compare them: finite-mode cochains,
+  the degree convention, the color basis and one sign that differs from the manuscript.
+- mathlib and Tau Ceti at the pinned revisions.
+
+`verification/` also holds a frozen copy of the statement and a script that compares it with
+`lean/` using Lean's comparator. That comparison has not been run; see
+[verification/STATUS.md](verification/STATUS.md).
+
+## Module graph
+
+The modules reachable from `MainProof` number 967, with 1,738 direct imports. The graph below
+keeps 18 of them and removes redundant arrows. An arrow points from a module to one that uses
+it, possibly through intermediate files. mathlib and Tau Ceti are omitted. It shows imports,
+not theorem dependencies; [PROOF-GUIDE.md](docs/PROOF-GUIDE.md) explains the proof.
 
 ```mermaid
 flowchart TD
@@ -136,28 +126,16 @@ flowchart TD
 
 ## Layout
 
-| Path | Purpose |
+| Path | What it is |
 |---|---|
-| `lean/Final.lean` | Readable, explicit main theorem interface |
-| `lean/MainProof.lean` | Completed theorem and bijectivity corollary |
-| `lean/KhanSL2/` | Definitions and proofs, grouped by topic |
-| `lean/*Audit.lean` | Axiom and interface checks |
-| `docs/SCOPE.md` | Exact mathematics, conventions, and scope |
-| `docs/DECLARATIONS.md` | Mathematical objects and claims mapped to Lean declarations |
-| `docs/PROOF-GUIDE.md` | Explanation of the final proof structure |
+| `lean/Final.lean` | The main theorem with source, target, operations and map written out |
+| `lean/MainProof.lean` | `mainStatement` and `phi_bijective` |
+| `lean/KhanSL2/` | Definitions and proofs, by topic |
+| `lean/*Audit.lean` | Axiom and type checks |
+| `docs/SCOPE.md` | The theorem in mathematical language; conventions; what is not formalized |
+| `docs/DECLARATIONS.md` | Objects and claims of the paper, mapped to Lean declarations |
+| `docs/PROOF-GUIDE.md` | The structure of the proof |
 | `formalization.json` | Machine-readable index of the main declarations |
-| `verification/` | Frozen baseline, source hashes, checking instructions and results |
-| `paper/` | The mathematical manuscript |
-
-## What verification establishes
-
-Compilation and the axiom audit check a proof of the precise Lean proposition.
-The frozen-reference comparison additionally checks agreement with a fixed formal
-statement and its definitions. Neither procedure automatically
-validates the correspondence between the Lean definitions and every informal
-claim in a manuscript. [SCOPE.md](docs/SCOPE.md) makes that correspondence and its
-conventions reviewable.
-
-See [verification instructions](verification/README.md) for exported-proof
-checking and the Linux Comparator workflow. The shipped reference has a real
-proof; the release does not add a sorried challenge theorem.
+| `verification/` | Source hashes, frozen statement, build logs, last results |
+| `scripts/` | Verification, integrity and comparison scripts |
+| `paper/` | The manuscript |
