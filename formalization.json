@@ -16,32 +16,32 @@
       "id": "main_theorem",
       "declaration": "KhanSL2.mainStatement",
       "file": "lean/MainProof.lean",
-      "description": "Unconditional proof of the specified-map isomorphism.",
+      "description": "Proof that phi is a graded differential PVA isomorphism.",
       "paper_result": "Theorem 1.1"
     },
     {
       "id": "explicit_main_theorem",
       "declaration": "KhanSL2.mainStatement_explicit",
       "file": "lean/Final.lean",
-      "description": "Same proposition with source, target, operations and map displayed."
+      "description": "The same proposition with source, target, operations and map written out."
     },
     {
       "id": "main_proposition",
       "declaration": "KhanSL2.MainStatement",
       "file": "lean/KhanSL2/MainStatement.lean",
-      "description": "The proposition; this definition alone is not a proof."
+      "description": "The proposition proved by mainStatement."
     },
     {
       "id": "canonical_map",
       "declaration": "KhanSL2.phi",
       "file": "lean/KhanSL2/CanonicalMap.lean",
-      "description": "The specified canonical linear map."
+      "description": "The canonical linear map from source to target."
     },
     {
       "id": "map_bijective",
       "declaration": "KhanSL2.phi_bijective",
       "file": "lean/MainProof.lean",
-      "description": "Bijectivity of the original canonical map."
+      "description": "phi is bijective."
     },
     {
       "id": "factorization",
