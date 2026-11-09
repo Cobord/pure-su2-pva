@@ -22,7 +22,7 @@ stated even and odd generators
 bidegree they are isomorphic to cohomology
 ([`StrongMacdonald.harmEquivCohom`](lean/KhanSL2/StrongMacdonald/Hodge.lean)).
 
-Size: about 121,000 lines in 1,048 Lean files, counting comments and audit files, on top of
+Size: about 121,000 lines in 1,049 Lean files, counting comments and audit files, on top of
 mathlib and Tau Ceti.
 
 ## Build
