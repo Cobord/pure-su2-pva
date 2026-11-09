@@ -78,7 +78,7 @@ preservation laws for these fixed structures.
 ## Relation to the manuscript
 
 The paper's [Theorem 1.1](../paper/Pure_SU2_PVA_Proof.pdf) is the target
-isomorphism statement. Equation (1.3) gives the source presentation; Section 2.2
+isomorphism statement. Theorem 1.1 and Section 2.1 give the source presentation; Section 2.2
 explicitly uses finite polynomial cochains and graded duals; Section 2.3,
 equation (2.10), gives the cocycle images above. The paper uses variables z,w
 where this guide uses x,y. Colors are numbered 1,2,3 there
@@ -91,7 +91,9 @@ its Section 2.2 commutator has a minus sign, while the checked
 \(Q T-T Q=+\sum_a c_1^a L_a\) for the formalized color-action convention.
 Both expressions vanish on invariants; the formal proof uses its checked plus
 sign. The formal proof uses the checked Strong Macdonald/Hodge development to
-supply the factorization input corresponding to Section 6 and Appendix A.
+supply the factorization input of Section 6. The current draft of Section 6
+argues differently, with cup products at disjoint supports and Teleman's
+theorem (Theorem 3.3).
 The claim is the precise formal isomorphism theorem, not a line-by-line
 formalization of every argument or consequence in the paper.
 
